@@ -4,9 +4,11 @@ require("dotenv").config();
 const port = process.env.PORT || 3002;
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const users = require("./api/routes/users");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use("/users", users);
 
 mongoose
   .connect(

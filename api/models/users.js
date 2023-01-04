@@ -5,6 +5,11 @@ const userSchema = mongoose.Schema({
   username: {
     type: String,
     required: true,
+    match: /^[a-zA-Z0-9]+$/,
+  },
+  tagname: {
+    type: String,
+    required: true,
     unique: true,
     match: /^[a-zA-Z0-9]+$/,
   },
@@ -17,6 +22,11 @@ const userSchema = mongoose.Schema({
   password: {
     type: String,
     required: true,
+  },
+  avatar: {
+    type: String,
+    default:
+      "https://res.cloudinary.com/dsrt15tfk/image/upload/v1672820955/defaul_fhcqsi.png",
   },
 });
 
