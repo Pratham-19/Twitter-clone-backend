@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const User = require("../models/user");
+const User = require("../models/users");
 
 router.post("/signup", (req, res, next) => {
   User.find({ tagname: req.body.tagname })
@@ -55,7 +55,7 @@ router.post("/signup", (req, res, next) => {
     });
 });
 router.post("/login", (req, res, next) => {
-  User.findOne({ tagname: req.body.tagname })
+  User.findOne({ $or: [{ email: req.body.email }, { phone: req.body.phone }] })
     .exec()
     .then((user) => {
       if (!user) {
@@ -99,3 +99,5 @@ router.post("/login", (req, res, next) => {
       });
     });
 });
+
+module.exports = router;
