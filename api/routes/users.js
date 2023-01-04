@@ -4,6 +4,25 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/users");
+const rootAuth = require("../middleware/root-auth");
+
+router.get("/", rootAuth, (req, res, next) => {
+  User.find()
+    .select(" username email tagname avatar ")
+    .exec()
+    .then((docs) => {
+      res.status(200).json({
+        count: docs.length,
+        users: docs.map((doc) => doc),
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).json({
+        error: err,
+      });
+    });
+});
 
 router.post("/signup", (req, res, next) => {
   User.find({ tagname: req.body.tagname })
@@ -55,7 +74,9 @@ router.post("/signup", (req, res, next) => {
     });
 });
 router.post("/login", (req, res, next) => {
-  User.findOne({ $or: [{ email: req.body.email }, { phone: req.body.phone }] })
+  User.findOne({
+    $or: [{ email: req.body.email }, { tagname: req.body.tagname }],
+  })
     .exec()
     .then((user) => {
       if (!user) {
